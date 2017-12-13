@@ -18,4 +18,5 @@ Usage
 
 Unit Test Automation
 --------------------
-1. Run "test.py".
+1. "C:\test.png" and "C:\test.txt" must exist.
+2. Run "test.py".
