@@ -1,6 +1,7 @@
-from tkinter import Tk, Label, Entry, Button, StringVar, W, E, filedialog
+from tkinter import Tk, Label, Entry, Button, StringVar, W, E, filedialog, messagebox
 import imageManipulation
 from PIL import Image
+import imghdr
 
 
 class Gui:
@@ -62,20 +63,29 @@ class Gui:
         if method == "browse":
             self.clear()
             root = Tk()
-            file = filedialog.askopenfile(parent=root, mode='rb', title='Choose a file')
+            myFormats = [('Portable Network Graphics (.png)', '*.png'),
+                         ('JPEG / JFIF (.jpg)', '*.jpg'),
+                         ('Windows Bitmap (.bmp)', '*.bmp'),
+                         ('CompuServer GIF (.gif)', '*.gif')]
+            file = filedialog.askopenfile(parent=root, mode='rb', defaultextension=".png", filetypes=myFormats, title='Choose a file')
             if file is not None:
-                self.filename = file.name
-                self.filename_label_text.set(self.filename)
+                if imghdr.what(file) is None:
+                    messagebox.showinfo("Error", "Non-image file selected.")
+                else:
 
-                # Populate original width and height fields
-                self.im = Image.open(self.filename)
-                origWidth, origHeight = self.im.size
-                self.xOrig = origWidth
-                self.label_x_orig_text.set(self.xOrig)
-                self.yOrig = origHeight
-                self.label_y_orig_text.set(self.yOrig)
-                self.contentX.set(origWidth)
-                self.contentY.set(origHeight)
+                    self.filename = file.name
+                    self.filename_label_text.set(self.filename)
+
+                    # Populate original width and height fields
+                    self.im = Image.open(self.filename)
+                    origWidth, origHeight = self.im.size
+                    self.xOrig = origWidth
+                    self.label_x_orig_text.set(self.xOrig)
+                    self.yOrig = origHeight
+                    self.label_y_orig_text.set(self.yOrig)
+                    self.contentX.set(origWidth)
+                    self.contentY.set(origHeight)
+
             root.withdraw()
         elif method == "generate":
             if not (self.contentX.get() == "") or (self.contentY.get() == ""):

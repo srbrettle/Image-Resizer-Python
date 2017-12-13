@@ -17,6 +17,15 @@ class TestMethods(unittest.TestCase):
     def test_file_is_image(self):
         self.assertNotEqual(imghdr.what(filepath), None)
 
+    def test_diallow_non_images(self):
+        fpath = "C:\\test.txt"
+        #Check from main.py
+        if imghdr.what(fpath) is not None:
+            im = Image.open(fpath)
+            width = 500
+            height = 500
+            imageManipulation.resizeImage(im, width, height, True)
+
     def test_resized_dimensions_correct(self):
         im = Image.open(filepath)
         width = 500

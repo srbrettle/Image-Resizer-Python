@@ -1,6 +1,6 @@
 from PIL import Image
 from tkinter import filedialog
-
+import imghdr
 
 def resizeImage(im, width, height, skipdialog=False):
     imNN = im.resize((width, height), Image.NEAREST)        # use nearest neighbour
