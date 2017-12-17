@@ -1,15 +1,19 @@
 from PIL import Image
 from tkinter import filedialog
-import imghdr
 
-def resizeImage(im, width, height, skipdialog=False):
-    imNN = im.resize((width, height), Image.NEAREST)        # use nearest neighbour
-    # imBL = im.resize((width, height), Image.BILINEAR)     # linear interpolation in a 2x2 environment
-    # imBC = im.resize((width, height), Image.BICUBIC)      # cubic spline interpolation in a 4x4 environment
-    # imAA = im.resize((width, height), Image.ANTIALIAS)    # best down-sizing filter
+
+def resizeImage(im, filtr, width, height, skipdialog=False):
+    if filtr == "Nearest Neighbour":
+        image = im.resize((width, height), Image.NEAREST)      # nearest neighbour
+    elif filtr == "Bilinear":
+        image = im.resize((width, height), Image.BILINEAR)     # bilinear interpolation
+    elif filtr == "Bicubic":
+        image = im.resize((width, height), Image.BICUBIC)      # bicubic interpolation
+    elif filtr == "Anti-Alias":
+        image = im.resize((width, height), Image.ANTIALIAS)    # antialiasing
 
     if skipdialog:
-        file = "Test.png"
+        file = (filtr + ".png")
     else:
         myFormats = [('Portable Network Graphics (.png)', '*.png'),
                      ('JPEG / JFIF (.jpg)', '*.jpg'),
@@ -18,5 +22,5 @@ def resizeImage(im, width, height, skipdialog=False):
         file = filedialog.asksaveasfilename(defaultextension=".png", filetypes=myFormats)
 
     if file:
-        imNN.save(file)
+        image.save(file)
         return file

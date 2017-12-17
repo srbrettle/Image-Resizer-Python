@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, Entry, Button, StringVar, W, E, filedialog, messagebox
+from tkinter import Tk, Label, Entry, Button, StringVar, W, E, filedialog, messagebox, ttk
 import imageManipulation
 from PIL import Image
 import imghdr
@@ -13,6 +13,7 @@ class Gui:
         self.filename = "..."
         self.xOrig = "X"
         self.yOrig = "Y"
+        self.filter = "Nearest Neighbour"
 
         self.filename_label_text = StringVar()
         self.filename_label_text.set(self.filename)
@@ -38,6 +39,11 @@ class Gui:
         self.contentY = StringVar()
         self.entryY = Entry(master, text="Height: ", validate='key', validatecommand=vc, textvariable=self.contentY)
 
+        self.combobox_value = StringVar()
+        self.combobox = ttk.Combobox(master, textvariable=self.combobox_value)
+        self.combobox['values'] = ('Nearest Neighbour', 'Bilinear', 'Bicubic', 'Anti-Alias')
+        self.combobox.current(0)
+
         self.browse_button = Button(master, text="Browse...", command=lambda: self.update("browse"))
         self.generate_button = Button(master, text="Generate", command=lambda: self.update("generate"))
         self.reset_button = Button(master, text="Reset", command=lambda: self.update("reset"))
@@ -54,8 +60,9 @@ class Gui:
         self.label_y_orig.grid(row=3, column=1, sticky=W+E)
         self.entryX.grid(row=2, column=4, sticky=W+E)
         self.entryY.grid(row=3, column=4, sticky=W+E)
-        self.generate_button.grid(row=4, column=0, columnspan=4, sticky=W+E)
-        self.reset_button.grid(row=4, column=4, sticky=W+E)
+        self.combobox.grid(row=4, column=0, columnspan=5, sticky=W+E)
+        self.generate_button.grid(row=5, column=0, columnspan=4, sticky=W+E)
+        self.reset_button.grid(row=5, column=4, sticky=W+E)
 
         self.im = Image
 
@@ -89,7 +96,8 @@ class Gui:
             root.withdraw()
         elif method == "generate":
             if not (self.contentX.get() == "") or (self.contentY.get() == ""):
-                imageManipulation.resizeImage(self.im, int(self.contentX.get()), int(self.contentY.get()))
+                self.filter = self.combobox.get()
+                imageManipulation.resizeImage(self.im, self.filter, int(self.contentX.get()), int(self.contentY.get()))
         else:  # reset
             self.clear()
 
@@ -102,6 +110,7 @@ class Gui:
         self.label_y_orig_text.set(self.yOrig)
         self.contentX.set("")
         self.contentY.set("")
+        self.combobox.current(0)
 
     def validate(self, action, index, value_if_allowed,
                  prior_value, text, validation_type, trigger_type, widget_name):
