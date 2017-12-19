@@ -2,7 +2,7 @@
 
 Function
 --------
-"Image Resizer" allows for images to be quickly resized to a given height and width.
+"Image Resizer" allows for images to be quickly resized to a given height and width using a "Nearest Neighbour", "Bicubic", "Bilinear", or "Anti-Alias" filter.
 
 GUI
 -------
